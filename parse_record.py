@@ -11,3 +11,6 @@ df.plot(ylim=(0, None),
         title='My FlapPyBird scores',
         use_index=False,
         xlabel='Attempt #')
+
+import matplotlib.pyplot as plt
+plt.show()

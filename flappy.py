@@ -322,9 +322,9 @@ def mainGame(movementInfo):
 def save_score(current_score):
     from datetime import datetime
     from os import path
-    
+
     high_score_filename = 'my_high_score.csv'
-    
+
     # What is the record in 'my_high_score.csv'?
     previous_record = 0
     if path.exists(high_score_filename):
@@ -334,7 +334,7 @@ def save_score(current_score):
                 old_score = int(old_score)
                 if old_score > previous_record:
                     previous_record = old_score
-    
+
     # Add current score to 'my_high_score.csv'
     now_string = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
     with open(high_score_filename, 'a') as high_score_file:
@@ -342,9 +342,8 @@ def save_score(current_score):
 
     if current_score > previous_record:
         print("Congratulations!")
-        print("You just broke your previous record,")
-        print("from %d to %d!" % (previous_record, current_score))
-        
+        print("You just broke your previous record, from %d to %d!" % (previous_record, current_score))
+
 
 
 def showGameOverScreen(crashInfo):

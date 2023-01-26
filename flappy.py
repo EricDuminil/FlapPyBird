@@ -319,6 +319,35 @@ def mainGame(movementInfo):
         FPSCLOCK.tick(FPS)
 
 
+def save_score(score):
+    high_score_filename = 'my_high_score.csv'
+    from datetime import datetime
+    now_string = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+    with open(high_score_filename, 'a') as high_score_file:
+        high_score_file.write('%s;%d\n' % (now_string, score))
+        
+
+    import pandas as pd
+    df = pd.read_csv(high_score_filename,
+                     sep=';',
+                     names=['datetime', 'score'],
+                     index_col='datetime'
+                     )    
+
+    df.plot(ylim=(0, None),
+            title='My FlapPyBird scores',
+            use_index=False,
+            xlabel='Attempt #')
+
+    previous_record = df.score[:-1].max()
+
+    if score > previous_record:
+        print("Congratulations!")
+        print("You just broke your previous record,")
+        print("from %d to %d!" % (previous_record, score))
+        
+
+
 def showGameOverScreen(crashInfo):
     """crashes the player down and shows gameover image"""
     score = crashInfo['score']
@@ -333,6 +362,8 @@ def showGameOverScreen(crashInfo):
     basex = crashInfo['basex']
 
     upperPipes, lowerPipes = crashInfo['upperPipes'], crashInfo['lowerPipes']
+
+    save_score(score)
 
     # play hit and die sounds
     SOUNDS['hit'].play()

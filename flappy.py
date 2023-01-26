@@ -319,32 +319,31 @@ def mainGame(movementInfo):
         FPSCLOCK.tick(FPS)
 
 
-def save_score(score):
-    high_score_filename = 'my_high_score.csv'
+def save_score(current_score):
     from datetime import datetime
+    from os import path
+    
+    high_score_filename = 'my_high_score.csv'
+    
+    # What is the record in 'my_high_score.csv'?
+    previous_record = 0
+    if path.exists(high_score_filename):
+        with open(high_score_filename) as high_score_file:
+            for line in high_score_file:
+                when, old_score = line.split(';')
+                old_score = int(old_score)
+                if old_score > previous_record:
+                    previous_record = old_score
+    
+    # Add current score to 'my_high_score.csv'
     now_string = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
     with open(high_score_filename, 'a') as high_score_file:
-        high_score_file.write('%s;%d\n' % (now_string, score))
-        
+        high_score_file.write('%s;%d\n' % (now_string, current_score))
 
-    import pandas as pd
-    df = pd.read_csv(high_score_filename,
-                     sep=';',
-                     names=['datetime', 'score'],
-                     index_col='datetime'
-                     )    
-
-    df.plot(ylim=(0, None),
-            title='My FlapPyBird scores',
-            use_index=False,
-            xlabel='Attempt #')
-
-    previous_record = df.score[:-1].max()
-
-    if score > previous_record:
+    if current_score > previous_record:
         print("Congratulations!")
         print("You just broke your previous record,")
-        print("from %d to %d!" % (previous_record, score))
+        print("from %d to %d!" % (previous_record, current_score))
         
 
 
@@ -363,12 +362,12 @@ def showGameOverScreen(crashInfo):
 
     upperPipes, lowerPipes = crashInfo['upperPipes'], crashInfo['lowerPipes']
 
-    save_score(score)
-
     # play hit and die sounds
     SOUNDS['hit'].play()
     if not crashInfo['groundCrash']:
         SOUNDS['die'].play()
+        
+    save_score(score)
 
     while True:
         for event in pygame.event.get():

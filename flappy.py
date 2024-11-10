@@ -58,6 +58,8 @@ def main():
     pygame.init()
     FPSCLOCK = pygame.time.Clock()
     SCREEN = pygame.display.set_mode((SCREENWIDTH, SCREENHEIGHT))
+    # NOTE: Uncomment for HiDPI display
+    # SCREEN = pygame.display.set_mode((SCREENWIDTH, SCREENHEIGHT), flags=pygame.SCALED)
     pygame.display.set_caption('Flappy Bird')
 
     # numbers sprites for score display
